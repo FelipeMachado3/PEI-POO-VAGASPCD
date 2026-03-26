@@ -27,8 +27,12 @@ app.post('/cadastro', async (req, res) => {
     return res.status(400).json({ erro: 'nome, cpf e whatsapp são obrigatórios' });
   }
 
+  const client = await pool.connect();
+
   try {
-    const pessoa = await pool.query(
+    await client.query('BEGIN');
+
+    const pessoa = await client.query(
       `INSERT INTO pessoas_pcd (nome, cpf, data_nasc)
        VALUES ($1, $2, $3) RETURNING id`,
       [nome, cpf, data_nasc]
@@ -36,20 +40,31 @@ app.post('/cadastro', async (req, res) => {
 
     const pessoa_id = pessoa.rows[0].id;
 
-    await pool.query(
+    await client.query(
       `INSERT INTO contatos (pessoa_id, email, whatsapp, cidade, estado)
        VALUES ($1, $2, $3, $4, $5)`,
       [pessoa_id, email, whatsapp, cidade, estado]
     );
 
-    res.status(201).json({ mensagem: 'Cadastro realizado!', id: pessoa_id });
+    await client.query('COMMIT');
+
+    res.status(201).json({
+      mensagem: 'Cadastro realizado!',
+      id: pessoa_id
+    });
 
   } catch (err) {
+    await client.query('ROLLBACK');
+
+    console.error('Erro real:', err); 6
+
     if (err.code === '23505') {
       return res.status(409).json({ erro: 'CPF já cadastrado' });
     }
-    console.error(err);
-    res.status(500).json({ erro: 'Erro ao cadastrar' });
+
+    res.status(500).json({ erro: err.message }); // 👈 MOSTRA NO POSTMAN
+  } finally {
+    client.release();
   }
 });
 
