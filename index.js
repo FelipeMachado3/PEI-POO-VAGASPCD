@@ -1,8 +1,10 @@
 const express = require('express');
+const cors = require('cors');
 const { Pool } = require('pg');
 require('dotenv').config();
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 const pool = new Pool({
@@ -56,7 +58,7 @@ app.post('/cadastro', async (req, res) => {
   } catch (err) {
     await client.query('ROLLBACK');
 
-    console.error('Erro real:', err); 6
+    console.error('Erro real:', err);
 
     if (err.code === '23505') {
       return res.status(409).json({ erro: 'CPF já cadastrado' });
