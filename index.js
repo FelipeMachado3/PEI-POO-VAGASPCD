@@ -1,10 +1,8 @@
 const express = require('express');
-const cors = require('cors');
 const { Pool } = require('pg');
 require('dotenv').config();
 
 const app = express();
-app.use(cors());
 app.use(express.json());
 
 const pool = new Pool({
@@ -15,7 +13,7 @@ const pool = new Pool({
   database: process.env.DB_NAME,
 });
 
-// TESTE
+// ================= TESTE =================
 app.get('/', (req, res) => {
   res.json({ mensagem: 'API PCD funcionando!' });
 });
@@ -23,50 +21,34 @@ app.get('/', (req, res) => {
 
 // ================= CADASTRO =================
 app.post('/cadastro', async (req, res) => {
-  const { nome, cpf, data_nasc, email, whatsapp, cidade, estado } = req.body;
+  const { nome, cpf, data_nasc, email, telefone, cidade, estado } = req.body;
 
-  if (!nome || !cpf || !whatsapp) {
-    return res.status(400).json({ erro: 'nome, cpf e whatsapp são obrigatórios' });
+  if (!nome || !cpf || !telefone) {
+    return res.status(400).json({ erro: 'nome, cpf e telefone são obrigatórios' });
   }
 
-  const client = await pool.connect();
-
   try {
-    await client.query('BEGIN');
-
-    const pessoa = await client.query(
-      `INSERT INTO pessoas_pcd (nome, cpf, data_nasc)
-       VALUES ($1, $2, $3) RETURNING id`,
-      [nome, cpf, data_nasc]
+    const result = await pool.query(
+      `INSERT INTO cadastro_pcd 
+       (nome, cpf, data_nasc, email, telefone, cidade, estado)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       RETURNING id`,
+      [nome, cpf, data_nasc, email, telefone, cidade, estado]
     );
-
-    const pessoa_id = pessoa.rows[0].id;
-
-    await client.query(
-      `INSERT INTO contatos (pessoa_id, email, whatsapp, cidade, estado)
-       VALUES ($1, $2, $3, $4, $5)`,
-      [pessoa_id, email, whatsapp, cidade, estado]
-    );
-
-    await client.query('COMMIT');
 
     res.status(201).json({
       mensagem: 'Cadastro realizado!',
-      id: pessoa_id
+      id: result.rows[0].id
     });
 
   } catch (err) {
-    await client.query('ROLLBACK');
-
-    console.error('Erro real:', err);
+    console.error(err);
 
     if (err.code === '23505') {
       return res.status(409).json({ erro: 'CPF já cadastrado' });
     }
 
     res.status(500).json({ erro: err.message });
-  } finally {
-    client.release();
   }
 });
 
@@ -251,17 +233,12 @@ app.post('/preferencias', async (req, res) => {
 });
 
 
-// ================= LISTAGEM =================
+// ================= LISTAR PESSOAS =================
 
 app.get('/pessoas', async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT p.id, p.nome, p.cpf, c.email, c.whatsapp, c.cidade, c.estado,
-              pt.area_interesse, pt.modalidade, pt.regime_preferido, pt.disponibilidade
-       FROM pessoas_pcd p
-       LEFT JOIN contatos c ON c.pessoa_id = p.id
-       LEFT JOIN preferencias_trabalho pt ON pt.pessoa_id = p.id
-       ORDER BY p.created_at DESC`
+      `SELECT * FROM cadastro_pcd ORDER BY id DESC`
     );
 
     res.json(result.rows);
@@ -279,10 +256,7 @@ app.get('/pessoa/:id', async (req, res) => {
 
   try {
     const pessoa = await pool.query(
-      `SELECT p.*, c.email, c.whatsapp, c.telefone, c.cidade, c.estado
-       FROM pessoas_pcd p
-       LEFT JOIN contatos c ON c.pessoa_id = p.id
-       WHERE p.id = $1`,
+      `SELECT * FROM cadastro_pcd WHERE id = $1`,
       [id]
     );
 
@@ -326,4 +300,7 @@ app.get('/pessoa/:id', async (req, res) => {
 });
 
 
-app.listen(3000, () => console.log('API rodando em http://localhost:3000'));
+// ================= START =================
+app.listen(3000, () => {
+  console.log('API rodando em http://localhost:3000');
+});
