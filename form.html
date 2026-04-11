@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -13,90 +14,160 @@
   <div class="card shadow p-4">
     <h2 class="mb-4 text-center">Cadastro para vagas PCD</h2>
 
-    <form id="formCadastro">
+<form id="formCadastro">
 
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Nome*</label>
-          <input type="text" class="form-control" name="nome" required>
-        </div>
+  <!-- ================= DADOS BÁSICOS ================= -->
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label class="form-label">Nome*</label>
+      <input type="text" class="form-control" name="nome" required>
+    </div>
 
-        <div class="col-md-6 mb-3">
-          <label class="form-label">CPF*</label>
-          <input type="text" class="form-control" name="cpf" id="cpf" required>
-        </div>
+    <div class="col-md-6 mb-3">
+      <label class="form-label">CPF*</label>
+      <input type="text" class="form-control" name="cpf" id="cpf" required>
+    </div>
 
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Data de nascimento</label>
-          <input type="date" class="form-control" name="data_nasc">
-        </div>
+    <div class="col-md-6 mb-3">
+      <label class="form-label">Data de nascimento</label>
+      <input type="date" class="form-control" name="data_nasc">
+    </div>
 
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Email</label>
-          <input type="email" class="form-control" name="email">
-        </div>
+    <div class="col-md-6 mb-3">
+      <label class="form-label">Email</label>
+      <input type="email" class="form-control" name="email">
+    </div>
 
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Telefone*</label>
-          <input type="text" class="form-control" name="telefone" id="telefone" required>
-        </div>
+    <div class="col-md-6 mb-3">
+      <label class="form-label">Telefone*</label>
+      <input type="text" class="form-control" name="telefone" id="telefone" required>
+    </div>
 
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Estado</label>
-          <select class="form-control" id="estado"></select>
-        </div>
+    <div class="col-md-6 mb-3">
+      <label class="form-label">Estado</label>
+      <select class="form-control" id="estado"></select>
+    </div>
 
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Cidade</label>
-          <select class="form-control" id="cidade"></select>
-        </div>
+    <div class="col-md-6 mb-3">
+      <label class="form-label">Cidade</label>
+      <select class="form-control" id="cidade"></select>
+    </div>
+  </div>
 
-      <button type="submit" class="btn btn-primary w-100">
-        Cadastrar
-      </button>
+  <!-- ================= DEFICIÊNCIA ================= -->
+  <hr>
+  <h5>Deficiência</h5>
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <input type="text" class="form-control" name="cid_codigo" placeholder="CID">
+    </div>
+    <div class="col-md-4 mb-3">
+      <input type="text" class="form-control" name="descricao_def" placeholder="Descrição">
+    </div>
+    <div class="col-md-4 mb-3">
+      <input type="text" class="form-control" name="grau" placeholder="Grau">
+    </div>
+  </div>
 
-    </form>
+  <!-- ================= EXPERIÊNCIA ================= -->
+  <hr>
+  <h5>Experiência</h5>
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <input type="text" class="form-control" name="cargo" placeholder="Cargo">
+    </div>
+    <div class="col-md-4 mb-3">
+      <input type="text" class="form-control" name="empresa" placeholder="Empresa">
+    </div>
+    <div class="col-md-4 mb-3">
+      <input type="text" class="form-control" name="area" placeholder="Área">
+    </div>
+  </div>
 
-    <div id="mensagem" class="mt-3"></div>
+  <!-- ================= HABILIDADES ================= -->
+  <hr>
+  <h5>Habilidades</h5>
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <input type="text" class="form-control" name="habilidade" placeholder="Habilidade">
+    </div>
+    <div class="col-md-6 mb-3">
+      <input type="text" class="form-control" name="nivel" placeholder="Nível">
+    </div>
+  </div>
+
+  <!-- ================= FORMAÇÃO ================= -->
+  <hr>
+  <h5>Formação</h5>
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <input type="text" class="form-control" name="curso" placeholder="Curso">
+    </div>
+    <div class="col-md-4 mb-3">
+      <input type="text" class="form-control" name="instituicao" placeholder="Instituição">
+    </div>
+    <div class="col-md-4 mb-3">
+      <input type="number" class="form-control" name="ano_conclusao" placeholder="Ano">
+    </div>
+  </div>
+
+  <!-- ================= PREFERÊNCIAS ================= -->
+  <hr>
+  <h5>Preferências</h5>
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <input type="text" class="form-control" name="area_interesse" placeholder="Área de Interesse">
+    </div>
+    <div class="col-md-4 mb-3">
+      <select name="modalidade" class="form-control text-secondary" id="modalidade" required>
+        <option value="" disabled selected>Selecione</option>
+        <option value="Híbrido">Híbrido</option>
+        <option value="Presencial">Presencial</option>
+        <option value="Online">Online</option>
+      </select>
+    </div>
+    <div class="col-md-4 mb-3">
+      <input type="text" class="form-control" name="regime_preferido" placeholder="Regime">
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
+
+</form>
+
+<div id="mensagem" class="mt-3"></div>
+
   </div>
 </div>
 
 <script>
-/* ================= MÁSCARA CPF ================= */
+// MÁSCARAS
 document.getElementById('cpf').addEventListener('input', function(e) {
   let v = e.target.value.replace(/\D/g, '');
-
   v = v.replace(/(\d{3})(\d)/, '$1.$2');
   v = v.replace(/(\d{3})(\d)/, '$1.$2');
   v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-
   e.target.value = v;
 });
 
-/* ================= MÁSCARA TELEFONE ================= */
 document.getElementById('telefone').addEventListener('input', function(e) {
   let v = e.target.value.replace(/\D/g, '');
-
   v = v.replace(/^(\d{2})(\d)/g, '($1) $2');
   v = v.replace(/(\d{5})(\d)/, '$1-$2');
-
   e.target.value = v;
 });
 
-/* ================= VALIDADOR CPF ================= */
+// VALIDA CPF
 function validarCPF(cpf) {
   cpf = cpf.replace(/\D/g, '');
-
   if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
 
-  let soma = 0;
-  let resto;
-
+  let soma = 0, resto;
   for (let i = 1; i <= 9; i++)
     soma += parseInt(cpf.substring(i-1, i)) * (11 - i);
 
   resto = (soma * 10) % 11;
-  if (resto === 10 || resto === 11) resto = 0;
+  if (resto >= 10) resto = 0;
   if (resto !== parseInt(cpf.substring(9, 10))) return false;
 
   soma = 0;
@@ -104,93 +175,143 @@ function validarCPF(cpf) {
     soma += parseInt(cpf.substring(i-1, i)) * (12 - i);
 
   resto = (soma * 10) % 11;
-  if (resto === 10 || resto === 11) resto = 0;
+  if (resto >= 10) resto = 0;
 
   return resto === parseInt(cpf.substring(10, 11));
 }
 
-/* ================= API CIDADE/ESTADO ================= */
+// ESTADOS E CIDADES
 async function carregarEstados() {
-  const response = await fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados");
-  const estados = await response.json();
+  const res = await fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados");
+  const estados = await res.json();
 
-  const selectEstado = document.getElementById("estado");
-
+  const select = document.getElementById("estado");
   estados.sort((a, b) => a.nome.localeCompare(b.nome));
 
-  estados.forEach(estado => {
-    const option = document.createElement("option");
-    option.value = estado.sigla;
-    option.textContent = estado.nome;
-    selectEstado.appendChild(option);
+  estados.forEach(e => {
+    select.innerHTML += `<option value="${e.sigla}">${e.nome}</option>`;
   });
 }
 
-document.getElementById("estado").addEventListener("change", function () {
-  carregarCidades(this.value);
+document.getElementById("estado").addEventListener("change", e => {
+  carregarCidades(e.target.value);
 });
 
 async function carregarCidades(uf) {
-  const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`);
-  const cidades = await response.json();
+  const res = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`);
+  const cidades = await res.json();
 
-  const selectCidade = document.getElementById("cidade");
-  selectCidade.innerHTML = "";
+  const select = document.getElementById("cidade");
+  select.innerHTML = "";
 
-  cidades.forEach(cidade => {
-    const option = document.createElement("option");
-    option.value = cidade.nome;
-    option.textContent = cidade.nome;
-    selectCidade.appendChild(option);
+  cidades.forEach(c => {
+    select.innerHTML += `<option value="${c.nome}">${c.nome}</option>`;
   });
 }
 
 carregarEstados();
 
-/* ================= ENVIO ================= */
+// ENVIO
 document.getElementById('formCadastro').addEventListener('submit', async function(e) {
   e.preventDefault();
 
   const form = e.target;
-  const cpf = form.cpf.value;
 
-  if (!validarCPF(cpf)) {
-    document.getElementById('mensagem').innerHTML =
-      '<div class="alert alert-danger">CPF inválido!</div>';
+  if (!validarCPF(form.cpf.value)) {
+    mensagem.innerHTML = '<div class="alert alert-danger">CPF inválido</div>';
     return;
   }
-
-  const data = {
-    nome: form.nome.value,
-    cpf: cpf.replace(/\D/g, ''),
-    data_nasc: form.data_nasc.value,
-    email: form.email.value,
-    telefone: form.telefone.value.replace(/\D/g, ''),
-    cidade: form.cidade.value,
-    estado: form.estado.value
-  };
 
   try {
     const res = await fetch('http://localhost:3000/cadastro', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify({
+        nome: form.nome.value,
+        cpf: form.cpf.value.replace(/\D/g, ''),
+        data_nasc: form.data_nasc.value,
+        email: form.email.value,
+        telefone: form.telefone.value.replace(/\D/g, ''),
+        cidade: form.cidade.value,
+        estado: form.estado.value
+      })
     });
 
     const result = await res.json();
+    if (!res.ok) throw new Error(result.erro);
 
-    if (res.ok) {
-      document.getElementById('mensagem').innerHTML =
-        '<div class="alert alert-success">Cadastro realizado!</div>';
-      form.reset();
-    } else {
-      document.getElementById('mensagem').innerHTML =
-        `<div class="alert alert-danger">${result.erro}</div>`;
+    const id = result.id;
+
+    // chamadas extras
+    if (form.cid_codigo.value) {
+      await fetch('http://localhost:3000/deficiencia', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cadastro_pcd_id: id,
+          cid_codigo: form.cid_codigo.value,
+          descricao: form.descricao_def.value,
+          grau: form.grau.value
+        })
+      });
     }
 
-  } catch (error) {
-    document.getElementById('mensagem').innerHTML =
-      '<div class="alert alert-danger">Erro ao conectar com API</div>';
+    if (form.cargo.value) {
+      await fetch('http://localhost:3000/experiencia', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cadastro_pcd_id: id,
+          cargo: form.cargo.value,
+          empresa: form.empresa.value,
+          area: form.area.value
+        })
+      });
+    }
+
+    if (form.habilidade.value) {
+      await fetch('http://localhost:3000/habilidade', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pessoa_id: id,
+          nome: form.habilidade.value,
+          nivel: form.nivel.value
+        })
+      });
+    }
+
+    if (form.curso.value) {
+      await fetch('http://localhost:3000/formacao', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pessoa_id: id,
+          curso: form.curso.value,
+          instituicao: form.instituicao.value,
+          ano_conclusao: form.ano_conclusao.value
+        })
+      });
+    }
+
+    if (form.area_interesse.value) {
+      await fetch('http://localhost:3000/preferencias', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pessoa_id: id,
+          area_interesse: form.area_interesse.value,
+          modalidade: form.modalidade.value,
+          regime_preferido: form.regime_preferido.value
+        })
+      });
+    }
+
+    mensagem.innerHTML = '<div class="alert alert-success">Cadastro completo!</div>';
+    form.reset();
+
+  } catch (err) {
+    mensagem.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
   }
 });
 </script>
