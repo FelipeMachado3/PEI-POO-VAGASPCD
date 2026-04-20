@@ -92,8 +92,13 @@
       <input type="text" class="form-control" name="habilidade" placeholder="Habilidade">
     </div>
     <div class="col-md-6 mb-3">
-      <input type="text" class="form-control" name="nivel" placeholder="Nível">
-    </div>
+  <select name="nivel" class="form-control">
+    <option value="">Selecione o nível</option>
+    <option value="basico">Básico</option>
+    <option value="intermediario">Intermediário</option>
+    <option value="avancado">Avançado</option>
+  </select>
+   </div>
   </div>
 
   <!-- ================= FORMAÇÃO ================= -->
@@ -119,15 +124,23 @@
       <input type="text" class="form-control" name="area_interesse" placeholder="Área de Interesse">
     </div>
     <div class="col-md-4 mb-3">
-      <select name="modalidade" class="form-control text-secondary" id="modalidade" required>
-        <option value="" disabled selected>Selecione</option>
-        <option value="Híbrido">Híbrido</option>
-        <option value="Presencial">Presencial</option>
-        <option value="Online">Online</option>
+      <select name="modalidade" class="form-control" required>
+      <option value="">Selecione</option>
+      <option value="presencial">Presencial</option>
+      <option value="hibrido">Híbrido</option>
+      <option value="remoto">Remoto</option>
+      <option value="indiferente">Indiferente</option>
       </select>
     </div>
     <div class="col-md-4 mb-3">
-      <input type="text" class="form-control" name="regime_preferido" placeholder="Regime">
+      <select name="regime_preferido" class="form-control" required>
+  <option value="">Selecione</option>
+  <option value="clt">CLT</option>
+  <option value="pj">PJ</option>
+  <option value="estagio">Estágio</option>
+  <option value="temporario">Temporário</option>
+  <option value="indiferente">Indiferente</option>
+       </select>
     </div>
   </div>
 
@@ -212,6 +225,7 @@ async function carregarCidades(uf) {
 carregarEstados();
 
 // ENVIO
+
 document.getElementById('formCadastro').addEventListener('submit', async function(e) {
   e.preventDefault();
 
@@ -223,89 +237,58 @@ document.getElementById('formCadastro').addEventListener('submit', async functio
   }
 
   try {
-    const res = await fetch('http://localhost:3000/cadastro', {
+    const res = await fetch('http://localhost:3000/cadastro-completo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+
+        // ================= DADOS PRINCIPAIS =================
         nome: form.nome.value,
-        cpf: form.cpf.value.replace(/\D/g, ''),
-        data_nasc: form.data_nasc.value,
-        email: form.email.value,
+        cpf: form.cpf.value,
+        data_nasc: form.data_nasc.value || null,
+        email: form.email.value || null,
         telefone: form.telefone.value.replace(/\D/g, ''),
-        cidade: form.cidade.value,
-        estado: form.estado.value
+        cidade: form.cidade.value || null,
+        estado: form.estado.value || null,
+
+        // ================= DADOS COMPLEMENTARES (TUDO EM UM) =================
+        dados_complementares: {
+          // DEFICIÊNCIA
+          cid_codigo: form.cid_codigo.value || null,
+          descricao: form.descricao_def.value || null,
+          grau: form.grau.value || null,
+
+          // EXPERIÊNCIA
+          cargo: form.cargo.value || null,
+          empresa: form.empresa.value || null,
+          area: form.area.value || null,
+        },
+
+        // ================= FORMAÇÃO =================
+        formacao: {
+          curso: form.curso.value || null,
+          instituicao: form.instituicao.value || null,
+          ano_conclusao: form.ano_conclusao.value || null
+        },
+
+        // ================= PREFERÊNCIAS =================
+        preferencias: {
+          area_interesse: form.area_interesse.value || null,
+          modalidade: form.modalidade.value || "indiferente",
+          regime_preferido: form.regime_preferido.value || "indiferente"
+        },
+
+        // ================= HABILIDADES =================
+        habilidade: form.habilidade.value ? {
+        nome: form.habilidade.value,
+        nivel: form.nivel.value
+         } : null,
+
       })
     });
 
     const result = await res.json();
     if (!res.ok) throw new Error(result.erro);
-
-    const id = result.id;
-
-    // chamadas extras
-    if (form.cid_codigo.value) {
-      await fetch('http://localhost:3000/deficiencia', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          cadastro_pcd_id: id,
-          cid_codigo: form.cid_codigo.value,
-          descricao: form.descricao_def.value,
-          grau: form.grau.value
-        })
-      });
-    }
-
-    if (form.cargo.value) {
-      await fetch('http://localhost:3000/experiencia', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          cadastro_pcd_id: id,
-          cargo: form.cargo.value,
-          empresa: form.empresa.value,
-          area: form.area.value
-        })
-      });
-    }
-
-    if (form.habilidade.value) {
-      await fetch('http://localhost:3000/habilidade', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          pessoa_id: id,
-          nome: form.habilidade.value,
-          nivel: form.nivel.value
-        })
-      });
-    }
-
-    if (form.curso.value) {
-      await fetch('http://localhost:3000/formacao', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          pessoa_id: id,
-          curso: form.curso.value,
-          instituicao: form.instituicao.value,
-          ano_conclusao: form.ano_conclusao.value
-        })
-      });
-    }
-
-    if (form.area_interesse.value) {
-      await fetch('http://localhost:3000/preferencias', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          pessoa_id: id,
-          area_interesse: form.area_interesse.value,
-          modalidade: form.modalidade.value,
-          regime_preferido: form.regime_preferido.value
-        })
-      });
-    }
 
     mensagem.innerHTML = '<div class="alert alert-success">Cadastro completo!</div>';
     form.reset();
@@ -314,7 +297,9 @@ document.getElementById('formCadastro').addEventListener('submit', async functio
     mensagem.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
   }
 });
+
 </script>
+
 
 </body>
 </html>

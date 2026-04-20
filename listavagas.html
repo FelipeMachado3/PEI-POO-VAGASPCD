@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Vagas PCD</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<div class="container py-5">
+
+  <h2 class="mb-4 text-center">Vagas PCD disponíveis</h2>
+
+  <div class="text-center mb-3">
+    <button class="btn btn-primary" onclick="listarVagas()">
+      Atualizar lista
+    </button>
+  </div>
+
+  <div id="listaVagas"></div>
+
+</div>
+
+<script>
+// ================= LISTAR VAGAS =================
+async function listarVagas() {
+  const container = document.getElementById("listaVagas");
+
+  container.innerHTML = "Carregando...";
+
+  try {
+    const res = await fetch('http://localhost:3000/vagas'); // ajuste a rota conforme sua API
+    const dados = await res.json();
+
+    if (!dados.length) {
+      container.innerHTML = '<div class="alert alert-warning">Nenhuma vaga encontrada</div>';
+      return;
+    }
+
+    let html = `
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Empresa</th>
+            <th>Local</th>
+            <th>Salário Mínimo</th>
+            <th>Salário Máximo</th>
+            <th>Data Publicação</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    dados.forEach(v => {
+      html += `
+        <tr>
+          <td>${v.titulo}</td>
+          <td>${v.empresa ?? '-'}</td>
+          <td>${v.area ?? '-'}</td>
+          <td>${v.salario_min ?? '-'}</td>
+          <td>${v.salario_max ?? '-'}</td>
+          <td>${v.recebida_em ?? '-'}</td>
+          <td><a href="${v.url_vaga}" target="_blank" class="btn btn-sm btn-success">Ver vaga</a></td>
+        </tr>
+      `;
+    });
+
+    html += `</tbody></table>`;
+
+    container.innerHTML = html;
+
+  } catch (err) {
+    container.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
+  }
+}
+
+// carregar automaticamente ao abrir
+listarVagas();
+</script>
+
+</body>
+</html>
